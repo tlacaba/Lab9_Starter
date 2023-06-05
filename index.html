@@ -47,6 +47,13 @@
       width: 122px;
     }
   </style>
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "0d78bf6bf27f488998589a2e00f1f7c1"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>  
 </head>
 
 <body>
@@ -88,20 +95,150 @@
   </main>
 
   <script>
+    class inputError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "inputError";
+      }
+    }
+
+    const regex = /[^0-9]/;
+
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
-      e.preventDefault();
-      let output = document.querySelector('output');
-      let firstNum = document.querySelector('#first-num').value;
-      let secondNum = document.querySelector('#second-num').value;
-      let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      try {
+        e.preventDefault();
+        let output = document.querySelector('output');
+        let firstNum = document.querySelector('#first-num').value;
+        let secondNum = document.querySelector('#second-num').value;
+        let operator = document.querySelector('#operator').value;
+
+        if (regex.test(firstNum) || regex.test(secondNum)) {
+          throw new inputError("Your input is not a number!")
+        }
+
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch (err) {
+        if (err instanceof inputError) {
+          console.error("One of your inputs is not a number!")
+        }
+        console.error("We had issues adding the two numbers!: " + err);
+      } finally {
+        console.log("Attempted to add these two inputted values");
+      }
+      
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+    let logButton = errorBtns[0];
+    let errorButton = errorBtns[1];
+    let countButton = errorBtns[2];
+
+    let warnButton = errorBtns[3];
+    let assertButton = errorBtns[4];
+    let clearButton = errorBtns[5];
+
+    let dirButton = errorBtns[6];
+    let dirxmlButton = errorBtns[7];
+    let groupStartButton = errorBtns[8];
+
+    let groupEndButton = errorBtns[9];
+    let tableButton = errorBtns[10];
+    let timerStartButton = errorBtns[11];
+
+    let timerEndButton = errorBtns[12];
+    let traceButton = errorBtns[13];
+    let globalErrorButton = errorBtns[14];
+
+
+    logButton.addEventListener('click', event => {
+      console.log("Console Log Demo");
+    });
+
+    errorButton.addEventListener('click', event => {
+      console.error("Console Error Demo");
+    });
+
+    countButton.addEventListener('click', event => {
+      console.count("count");
+    });
+
+    warnButton.addEventListener('click', event => {
+      console.warn("Console Warn Demo");
+    });
+
+    assertButton.addEventListener('click', event => {
+      const x = 20;
+      const y = 23;
+      const reason = 'x is expected to be greater than y';
+      console.assert(x > y, {x, y, reason});
+    });
+
+    clearButton.addEventListener('click', event => {
+      console.clear();
+    });
+
+    dirButton.addEventListener('click', event => {
+      console.dir(dirButton);
+    });
+
+    dirxmlButton.addEventListener('click', event => {
+      console.dirxml(dirxmlButton);
+    });
+
+    groupStartButton.addEventListener('click', event => {
+      console.group("Group of Console Stuff");
+    });
+
+    groupEndButton.addEventListener('click', event => {
+      console.groupEnd();
+    });
+
+    tableButton.addEventListener('click', event => {
+      const foodRatings = [
+        {
+          food: 'Cheeseburger',
+          rating: 8
+        },
+        {
+          food: 'Bacon',
+          rating: 10
+        },
+        {
+          food: 'Sinigang',
+          rating: 10
+        }
+      ]
+      console.table(foodRatings);
+    });
+
+    timerStartButton.addEventListener('click', event => {
+      console.time();
+    });
+
+    timerEndButton.addEventListener('click', event => {
+      console.timeEnd();
+    });
+
+    traceButton.addEventListener('click', event => {
+      const go = () => { we(); };
+      const we = () => { doo(); };
+      const doo = () => { deep(); };
+      const deep = () => { how(); };
+      const how = () => { console.trace(); };
+      go();
+    });
+
+    globalErrorButton.addEventListener('click', event => {
+      if (window.onerror) {
+        console.log("what: " + window.onerror);
+      }
+    });
+    TrackJS.track('Testing TrackJS!');
+                        
   </script>
 </body>
 
