@@ -233,11 +233,24 @@
     });
 
     globalErrorButton.addEventListener('click', event => {
-      if (window.onerror) {
-        console.log("what: " + window.onerror);
+      try {
+        causeARuckus();
+      } catch (err) {
+        console.error(err);
+      } finally {
+        console.log("This button is up to no good.");
       }
     });
+
+    // By the way, I wrote the better try block stuff with extended errors to wrap around the error calculator script. 
+
     TrackJS.track('Testing TrackJS!');
+
+    window.addEventListener('error', (event) => {
+      if (window.onerror) {
+        console.log(window.onerror);
+      }
+    });
                         
   </script>
 </body>
